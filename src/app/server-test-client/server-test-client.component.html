@@ -1,0 +1,46 @@
+<div class="grid-container">
+  <!-- input fields -->
+  <div class="grid-column-input" style="border: 1px solid black; margin-right: 5px">
+    <div style="margin: 20px" *ngIf="username === undefined">
+      <input id="username-input" #usernameInput type="text" />
+      <button id="register-user-button" type="button" (click)="registerUser(true)">Register User</button>
+    </div>
+
+    <div style="margin: 20px" *ngIf="username !== undefined">
+      <button id="de-register-user-button" type="button" (click)="registerUser(false)">De-Register User</button>
+    </div>
+
+    <div style="margin: 20px" *ngIf="username !== undefined">
+      <input id="group-input" #groupNameInput type="text" />
+      <button id="register-group-button" type="button">Register In Group</button>
+    </div>
+
+    <div style="margin: 20px" *ngIf="username !== undefined && selectedGroup !== undefined">
+      <button id="de-register-group-button" type="button">De-Register From Group</button>
+    </div>
+
+    <div id="username" style="margin: 20px" *ngIf="username">{{ username }}</div>
+
+    <div id="selected-group" style="margin: 20px" *ngIf="selectedGroup">{{ selectedGroup }}</div>
+
+    <div id="selected-user" style="margin: 20px" *ngIf="selectedUser">{{ selectedUser }}</div>
+
+    <div id="online-users" style="margin: 20px">
+      <div *ngFor="let entry of onlineUsers.entries()" style="margin: 20px">
+        <div style="margin: 20px">
+          {{ entry[0] }}
+        </div>
+        <div style="margin: 20px" *ngIf="entry[1]">
+          <input id="message-input" type="text" (keydown)="sendMessage($event, entry[0])" />
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- message display div -->
+  <div id="message-div" #logMessageDiv class="grid-colum-messages" style="border: 1px solid black" *ngIf="logMessages.length > 0">
+    <p *ngFor="let logMessage of logMessages" class="header-font">
+      {{ logMessage }}
+    </p>
+  </div>
+</div>
