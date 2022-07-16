@@ -62,6 +62,7 @@ export class ServerTestClientComponent implements OnInit, AfterViewInit, OnDestr
   }
 
   async handleWebSocketMessage(message: BaseSignalingMessage) {
+    this.logMessage(JSON.stringify(message));
     try {
       switch (message.type) {
         case SignalingMessageType.CONNECT:
@@ -80,16 +81,22 @@ export class ServerTestClientComponent implements OnInit, AfterViewInit, OnDestr
   async fetchActiveUsers() {}
 
   async registerUser(needRegister: boolean) {
-    if (needRegister && this.usernameInput!.nativeElement.value.trim().length === 0) {
+    let username = undefined;
+    if (needRegister) {
+      username = this.usernameInput!.nativeElement.value;
+    } else {
+      username = this.username;
+    }
+    if (needRegister && username.trim().length === 0) {
       this.logMessage('blank or invalid username');
     }
     const logText = needRegister ? 'register' : 'de-register';
-    this.logMessage(`${logText} user with username: ${this.usernameInput?.nativeElement.value}`);
+    this.logMessage(`${logText} user with username: ${username}`);
     let data: any = null;
     try {
       data = await firstValueFrom(
         this.apiService.post('users/register', {
-          username: needRegister ? this.usernameInput?.nativeElement.value : this.username,
+          username,
           needRegister,
         })
       );
@@ -109,8 +116,7 @@ export class ServerTestClientComponent implements OnInit, AfterViewInit, OnDestr
       } else {
         this.username = undefined;
       }
-      this.usernameInput!.nativeElement.value = '';
-      this.logMessage(`user ${logText} not successful`);
+      this.logMessage(`user ${logText} is successful`);
     } else {
       this.logMessage(`user ${logText} not successful`);
     }
